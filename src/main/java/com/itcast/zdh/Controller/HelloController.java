@@ -71,6 +71,7 @@ public class HelloController {
     @RequestMapping("/findStuAndScore")
     public ModelAndView  findStuAndScore() {
         List<StuAndScore> stuAndScore = studentService.findStuAndScore();
+        System.out.println(stuAndScore);
         ModelAndView mv=new ModelAndView();
         mv.setViewName("stuAndScore");
         mv.addObject("stuAndScore",stuAndScore);
