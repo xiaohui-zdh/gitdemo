@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itcast.zdh.mapper.StudentMapper">
+    <select id="findAllStudent" resultType="com.itcast.zdh.pojo.Student">
+        select * from student
+    </select>
+
+    <select id="findStudentById" parameterType="String" resultType="com.itcast.zdh.pojo.Student">
+        select * from student where s_id=#{s_id}
+    </select>
+
+    <update id="updateStudent" parameterType="com.itcast.zdh.pojo.Student">
+        update student set s_name=#{s_name},s_birth=#{s_birth},s_sex=#{s_sex} where s_id=#{s_id}
+    </update>
+
+    <select id="findStuAndScore" resultMap="findStuAndScoreMap">
+        select student.*,score.s_id as sid,score.c_id,score.s_score from student left join score on student.s_id=score.s_id
+    </select>
+
+    <resultMap id="findStuAndScoreMap" type="com.itcast.zdh.pojo.StuAndScore">
+        <id property="s_id" column="s_id"></id>
+        <id property="s_name" column="s_name"></id>
+        <result property="s_birth" column="s_birth"></result>
+        <result property="s_sex" column="s_sex"></result>
+        <collection property="scores" javaType="list" ofType="com.itcast.zdh.pojo.Score">
+            <id property="s_id" column="sid"></id>
+            <result property="c_id" column="c_id"></result>
+            <result property="s_score" column="s_score"></result>
+        </collection>
+    </resultMap>
+
+    <select id="findAvgScore" resultMap="findAvgScoreMap">
+        select stu.s_id,stu.s_name,sc1.s_score as 'yw',sc2.s_score as 'sx',sc3.s_score as 'yy',AVG(sc4.s_score) as 'pjf'
+        from student stu left join score sc1 on stu.s_id=sc1.s_id and sc1.c_id='01'
+        left join score sc2 on sc2.s_id=stu.s_id and sc2.c_id='02'
+        left join score sc3 on sc3.s_id=stu.s_id and sc3.c_id='03'
+        left join score sc4 on sc4.s_id=stu.s_id
+        GROUP BY stu.s_id
+        ORDER BY AVG(sc4.s_score) desc
+    </select>
+
+    <resultMap id="findAvgScoreMap" type="com.itcast.zdh.pojo.StudentVo">
+        <id property="s_id" column="s_id"></id>
+        <result property="s_name" column="s_name"></result>
+        <result property="yw_score" column="yw"></result>
+        <result property="sx_score" column="sx"></result>
+        <result property="yy_score" column="yy"></result>
+        <result property="avg" column="pjf"></result>
+    </resultMap>
+</mapper>
