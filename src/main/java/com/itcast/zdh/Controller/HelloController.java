@@ -40,6 +40,7 @@ public class HelloController {
         ModelAndView mv=new ModelAndView();
         mv.setViewName("stuList");
         mv.addObject("list",list);
+        System.out.println("111");
         return mv;
     }
 
